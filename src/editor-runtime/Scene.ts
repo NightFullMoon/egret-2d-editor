@@ -1,3 +1,8 @@
+/* eslint-disable */
+
+import Renderer from './renderer'
+import {each} from 'lodash'
+
 interface Tree {
   children?: Array<Tree>;
 }
@@ -7,7 +12,19 @@ interface Tree {
  * @param {Tree} tree
  * @param {function} callback
  */
-function traverse(tree: Tree, callback) {}
+function traverse(tree: Tree, callback) {
+    if(!tree){
+        return
+    }
+
+    callback(tree)
+
+    if(tree.children){
+        each(tree.children,(e:Tree)=>{
+            callback(e);
+        });
+    }
+}
 
 /**
  * 加载函数
@@ -73,6 +90,7 @@ class Scene {
 
     const loaders: Array<Promise<void>> = [];
     traverse(sceneInfo.objects, obj => {
+        console.log(obj)
       loaders.push(load(obj.url));
     });
 
@@ -84,3 +102,7 @@ class Scene {
     }, 1000 / 60);
   }
 }
+
+export default Scene;
+
+/* eslint-enable */
