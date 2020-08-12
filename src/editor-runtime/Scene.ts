@@ -1,10 +1,11 @@
 /* eslint-disable */
 
-import Renderer from './renderer'
+import RenderManager from './renderer'
+import { Renderer } from "./renderer/PixiRenderer";
 import {each} from 'lodash'
 
-interface Tree {
-  children?: Array<Tree>;
+interface Tree<T> {
+  children?: Array<T>;
 }
 
 /**
@@ -12,7 +13,7 @@ interface Tree {
  * @param {Tree} tree
  * @param {function} callback
  */
-function traverse(tree: Tree, callback) {
+function traverse<T extends Tree<T>>(tree: T, callback: (node: T) => void ) {
     if(!tree){
         return
     }
@@ -20,8 +21,8 @@ function traverse(tree: Tree, callback) {
     callback(tree)
 
     if(tree.children){
-        each(tree.children,(e:Tree)=>{
-            callback(e);
+        each(tree.children,(e: T)=>{
+          traverse(e, callback);
         });
     }
 }
@@ -38,7 +39,7 @@ function load(url: string): Promise<void> {
 /**
  * 场景的信息
  */
-interface SceneInfo {
+interface SceneInfo extends Tree<SceneInfo> {
   /**
    * 场景的名字
    */
@@ -47,8 +48,15 @@ interface SceneInfo {
   /**
    * 场景内的对象树
    */
-  objects: Tree;
+  children: Array<SceneInfo>;
+
+  /**
+   * 精灵的url
+   */
+  url?: string
 }
+
+// let 
 
 /**
  * 场景的基类
@@ -56,7 +64,11 @@ interface SceneInfo {
 class Scene {
   _timmer = 0;
 
-  constructor() {}
+  renderer: Renderer;
+
+  constructor() {
+    this.renderer = RenderManager.getRenderer()
+  }
 
   /**
    * 场景开始加载前触发
@@ -89,10 +101,21 @@ class Scene {
     this.onCreate();
 
     const loaders: Array<Promise<void>> = [];
-    traverse(sceneInfo.objects, obj => {
-        console.log(obj)
-      loaders.push(load(obj.url));
+    
+    let urls: Array<string> = []
+
+    traverse(sceneInfo, obj => {
+        // console.log(obj)
+      // loaders.push(load(obj.url || ''));
+      // console.log(obj.url)
+      if(!!obj.url){
+        urls.push(obj.url)
+      }
+      
     });
+
+    // console.log(urls)
+    await this.renderer.loadAndAddSprites(urls)
 
     await Promise.all(loaders);
     this.onReady();

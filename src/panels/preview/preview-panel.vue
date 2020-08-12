@@ -36,14 +36,30 @@ export default {
 
     new PixiRenderer(app);
 
-    console.log(Renderer.getRenderer());
+    // console.log(Renderer.getRenderer());
+
+    // const aPng = "/logo.png";
+
+    // PIXI.Loader.shared.add(aPng).load(() => {
+    //   //Create the cat sprite
+    //   const cat = new PIXI.Sprite(PIXI.Loader.shared.resources[aPng].texture);
+
+    //   //Add the cat to the stage
+    //   app.stage.addChild(cat);
+    // });
 
     // 初始化测试场景
     const demoScene = new MyScene();
     demoScene.loadFromSceneInfo({
-      objects: [
+      children: [
         {
-          url: "1.jpg"
+          url: "/logo.png"
+        },
+        {
+          url: "/image1.png"
+        },
+        {
+          url: "/image2.png"
         }
       ]
     });

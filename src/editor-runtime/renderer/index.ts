@@ -1,4 +1,5 @@
 import "./d.ts";
+import { Renderer } from "./PixiRenderer";
 
 /**
  * @static
