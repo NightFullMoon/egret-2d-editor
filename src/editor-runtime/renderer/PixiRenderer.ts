@@ -25,6 +25,46 @@ class PixiRenderer {
             PIXI.Loader.shared.resources[url].texture
           );
 
+          sprite.interactive = true;
+
+          let startX = 0;
+          let startY = 0;
+
+          let startMouseX = 0;
+          let startMouseY = 0;
+
+          let isMouseDown = false;
+
+          sprite.on("mousedown", (event: PIXI.InteractionEvent) => {
+            // console.log(event);
+            const positon = event.data.global;
+            startMouseX = positon.x;
+            startMouseY = positon.y;
+
+            startX = sprite.x;
+            startY = sprite.y;
+            // console.log(positon);
+
+            isMouseDown = true;
+          });
+
+          sprite.on("mousemove", (event: PIXI.InteractionEvent) => {
+            if (!isMouseDown) {
+              return;
+            }
+
+            const positon = event.data.global;
+            const offsetX = positon.x - startMouseX;
+            const offsetY = positon.y - startMouseY;
+
+            sprite.x = startX + offsetX;
+            sprite.y = startY + offsetY;
+          });
+
+          sprite.on("mouseup", () => {
+            isMouseDown = false;
+          });
+
           this.app.stage.addChild(sprite);
         });
 
