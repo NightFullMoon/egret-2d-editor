@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <previewPanle></previewPanle>
+    <scene></scene>
+    <previewPanle v-show="false"></previewPanle>
     <!-- <img alt="Vue logo" src="./assets/logo.png" /> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" /> -->
   </div>
@@ -9,12 +10,14 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 // import HelloWorld from "./components/HelloWorld.vue";
+import scene from "@/panels/scene/scene-tree";
 import previewPanle from "@/panels/preview/preview-panel.vue";
 
 @Component({
   components: {
     // HelloWorld
-    previewPanle
+    previewPanle,
+    scene
   }
 })
 export default class App extends Vue {}

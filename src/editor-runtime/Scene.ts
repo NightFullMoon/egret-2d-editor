@@ -2,7 +2,7 @@
 
 import RenderManager from './renderer'
 import { Renderer } from "./renderer/PixiRenderer";
-import {each} from 'lodash'
+import { each } from 'lodash'
 
 interface Tree<T> {
   children?: Array<T>;
@@ -13,18 +13,18 @@ interface Tree<T> {
  * @param {Tree} tree
  * @param {function} callback
  */
-function traverse<T extends Tree<T>>(tree: T, callback: (node: T) => void ) {
-    if(!tree){
-        return
-    }
+function traverse<T extends Tree<T>>(tree: T, callback: (node: T) => void) {
+  if (!tree) {
+    return
+  }
 
-    callback(tree)
+  callback(tree)
 
-    if(tree.children){
-        each(tree.children,(e: T)=>{
-          traverse(e, callback);
-        });
-    }
+  if (tree.children) {
+    each(tree.children, (e: T) => {
+      traverse(e, callback);
+    });
+  }
 }
 
 /**
@@ -66,6 +66,11 @@ class Scene {
 
   renderer: Renderer;
 
+  public sceneInfo: SceneInfo = {
+    name: '',
+    children: []
+  };
+
   constructor() {
     this.renderer = RenderManager.getRenderer()
   }
@@ -74,44 +79,46 @@ class Scene {
    * 场景开始加载前触发
    * @protected
    */
-  onCreate() {}
+  protected onCreate() { }
 
   /**
    * 资源加载完毕时触发
    * @protected
    */
-  onReady() {}
+  protected onReady() { }
 
   /**
    * 固定帧率的回调函数
    * @protected
    */
-  onFixedUpdate() {}
+  protected onFixedUpdate() { }
 
   /**
    * 场景被销毁前的回调函数
    * @protected
    */
-  beforeDestory() {}
+  protected beforeDestory() { }
 
   /**
    * 从 sceneInfo 对象加载场景所需要的资源
    */
   async loadFromSceneInfo(sceneInfo: SceneInfo) {
+    this.sceneInfo = sceneInfo;
+
     this.onCreate();
 
     const loaders: Array<Promise<void>> = [];
-    
+
     let urls: Array<string> = []
 
     traverse(sceneInfo, obj => {
-        // console.log(obj)
+      // console.log(obj)
       // loaders.push(load(obj.url || ''));
       // console.log(obj.url)
-      if(!!obj.url){
+      if (!!obj.url) {
         urls.push(obj.url)
       }
-      
+
     });
 
     // console.log(urls)

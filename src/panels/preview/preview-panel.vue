@@ -10,6 +10,7 @@ import * as PIXI from "pixi.js";
 import Scene from "@/editor-runtime/Scene.ts";
 import PixiRenderer from "@/editor-runtime/renderer/PixiRenderer";
 import Renderer from "@/editor-runtime/renderer";
+import SceneManger from "@/scene-manager";
 
 class MyScene extends Scene {
   constructor() {
@@ -49,7 +50,8 @@ export default {
     // });
 
     // 初始化测试场景
-    const demoScene = new MyScene();
+    let demoScene = new MyScene();
+    demoScene = new MyScene();
     demoScene.loadFromSceneInfo({
       children: [
         {
@@ -63,6 +65,8 @@ export default {
         }
       ]
     });
+    console.log("set scene");
+    SceneManger().setScene(demoScene);
   }
 };
 </script>
