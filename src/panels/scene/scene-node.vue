@@ -1,6 +1,13 @@
 <template>
-  <div>
-    <div class="object-name">
+  <div
+    @drop="onDrop"
+    @dragover="ondragover"
+    @dragleave="ondragexit"
+    @dragend="ondragend"
+    class="scene-node"
+    :class="{ 'drag-over': isDragover }"
+  >
+    <div class="object-name" draggable>
       <i
         class="toggle-icon"
         v-if="element.children && 0 < element.children.length"
@@ -10,7 +17,7 @@
         <ion-icon name="chevron-forward-outline"></ion-icon
       ></i>
 
-      {{ element.url }}
+      {{ element.name || element.url }}
     </div>
     <div class="children" v-show="isShowChildren">
       <sceneNode
@@ -34,8 +41,35 @@ export default {
   },
   data() {
     return {
-      isShowChildren: false
+      isShowChildren: false,
+      isDragover: false
     };
+  },
+  methods: {
+    onDrop() {
+      console.log("onDrop");
+      this.isDragover = false;
+    },
+    ondragover(event) {
+      // console.log("ondragover");
+      if (this.element.children) {
+        // 如果有子元素，则自己本身是容器，所以阻止事件冒泡
+        this.isDragover = true;
+        event.stopPropagation();
+      }
+
+      event.preventDefault();
+      return;
+    },
+
+    ondragexit() {
+      this.isDragover = false;
+    },
+
+    ondragend() {
+      console.log("ondragend");
+      this.isDragover = false;
+    }
   }
   //   components: {
   //     sceneNode
@@ -43,6 +77,12 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.scene-node {
+  &.drag-over {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
 .object-name {
   color: #ccc;
   font-size: 13px;

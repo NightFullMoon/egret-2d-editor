@@ -1,6 +1,7 @@
 <template>
   <div>
     <sceneNode :element="sceneInfo"></sceneNode>
+    <div style="height:300px;" @drop="foo"></div>
   </div>
 </template>
 <script>
@@ -20,6 +21,11 @@ export default {
   computed: {
     sceneInfo() {
       return instance.getScene().sceneInfo;
+    }
+  },
+  methods: {
+    foo() {
+      console.log("foo");
     }
   }
   /*   watch: {

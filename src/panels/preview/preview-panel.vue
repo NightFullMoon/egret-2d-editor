@@ -53,6 +53,7 @@ export default {
     let demoScene = new MyScene();
     demoScene = new MyScene();
     demoScene.loadFromSceneInfo({
+      name: "root",
       children: [
         {
           url: "/logo.png"
@@ -61,7 +62,12 @@ export default {
           url: "/image1.png"
         },
         {
-          url: "/image2.png"
+          name: "container",
+          children: [
+            {
+              url: "/image2.png"
+            }
+          ]
         }
       ]
     });
